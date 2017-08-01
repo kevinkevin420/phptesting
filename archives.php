@@ -35,7 +35,23 @@ echo strpos("smart person", "kevin"); // outputs false, because there is no kevi
 echo "<br>";
 echo str_replace("world", "Kevin", "Hello, world!");
 echo "<br>String refrences!";
+?>
+PHP constants
+<?php
+define("GREETING", "Welcome to my mine!"/*, true */); # case insensitive.
+echo GREETING;
+?>
+IF, ELSEIF, ELSE statements
+<?php
+$t = date("H");
 
+if ($t < "10") {
+    echo "Have a good morning!";
+} elseif ($t < "20") {
+    echo "Have a good day!";
+} else {
+    echo "Have a good night!";
+}
 ?>
 
 
