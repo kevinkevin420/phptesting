@@ -36,12 +36,12 @@ echo "<br>";
 echo str_replace("world", "Kevin", "Hello, world!");
 echo "<br>String refrences!";
 ?>
-PHP constants
+PHP constants 8/1/17
 <?php
 define("GREETING", "Welcome to my mine!"/*, true */); # case insensitive.
 echo GREETING;
 ?>
-IF, ELSEIF, ELSE statements
+IF, ELSEIF, ELSE statements 8/1/17
 <?php
 $t = date("H");
 
@@ -53,7 +53,7 @@ if ($t < "10") {
     echo "Have a good night!";
 }
 ?>
-For loops!
+For loops! 8/2/17
 <?php 
 for ($x = 0; $x <= 10; $x++) {
     echo "The number is: $x <br>";
@@ -61,7 +61,7 @@ for ($x = 0; $x <= 10; $x++) {
 
 ?>
 
-Functions!
+Functions! 8/2/17
 <?php
 function helloWorld() {
 	echo "<p> Hello world! </p>";
@@ -94,6 +94,7 @@ echo "2 + 4 = " . sum(2,4);
 
 ?>
 
+ARRRAYS AND ARRAY FUNCTIONS!
 
 
 
