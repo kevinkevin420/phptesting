@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
+<form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
   Name: <input type="text" name="fname" placeholder="Enter your name:">
   <input type="submit">
 </form>
