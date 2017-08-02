@@ -53,6 +53,13 @@ if ($t < "10") {
     echo "Have a good night!";
 }
 ?>
+For loops!
+<?php 
+for ($x = 0; $x <= 10; $x++) {
+    echo "The number is: $x <br>";
+} 
+
+?>
 
 
 
