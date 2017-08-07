@@ -31,15 +31,17 @@ if ($continue === 1 && $contRun === 0) {
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
-<title>Forms!</title>
+<title>PrettyDank - Forms</title>
 <style>
 #errorField {
-  animation: shake 0.42s cubic-bezier(.36,.07,.19,.97) both;
+ /* animation: shake 0.42s cubic-bezier(.36,.07,.19,.97) both;*/
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
   color: red; padding: none; margin: none;
   font-family: 'roboto-thin', sans-serif;
+  background-color: hsla(0, 100%, 50%, 0.3);
+  display: inline;
 }
 #error {
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
@@ -49,6 +51,15 @@ if ($continue === 1 && $contRun === 0) {
   color: red; padding: none; margin: none;
   font-family: 'roboto-thin', sans-serif;
   position: fixed;
+  background-color: hsla(0, 100%, 50%, 0.12);
+  display: inline;
+}
+
+::selection {
+  color: rgba(255, 255, 255, 0.21);
+}
+::-moz-selection {
+  color: rgba(255, 255, 255, 0.21);
 }
 
 
@@ -156,7 +167,7 @@ input, textarea {
 input:focus, textarea:focus {
     background-color: #f2f9ff;
     border: 1px solid white;
-    color: #00ced6;
+    color: #6abcf7;
     transition: background-color 0.5s ease;
 }
 textarea {
@@ -252,13 +263,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // checks for empty vars
     $nameErr = "Name is required";
     $errorBorderName = "errorborder";
     $continue = 0;
+    $errorMaster = 0;
   } else {
     $name = test_input($_POST["name"]);
     $continue = 1;
+    $nameErr = "";
     if (!preg_match("/^[a-zA-Z ]*$/",$name)) {
   $nameErr = "Only letters and white space allowed"; 
   $errorBorderName = "errorborder";
   $continue = 0;
+  $errorMaster = 0;
 }
   }
 
@@ -266,13 +280,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // checks for empty vars
     $emailErr = "Email is required";
     $errorBorderEmail = "errorborder";
     $continue = 0;
+    $errorMaster = 0;
   } else {
     $email = test_input($_POST["email"]);
     $continue = 1;
+    $emailErr = "";
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   $emailErr = "Invalid email format"; 
   $continue = 0;
   $errorBorderEmail = "errorborder";
+  $errorMaster = 0;
 }
   }
 
@@ -282,29 +299,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // checks for empty vars
   } else {
     $website = test_input($_POST["website"]);
     $continue = 1;
+    $websiteErr = "";
     if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$website)) {
   $websiteErr = "Invalid URL"; 
   $continue = 0;
   $errorBorderWebsite = "errorborder";
+  $errorMaster = 0;
 }
   }
 
   if (empty($_POST["comment"])) {
-    $commentErr = "Comment is required.";
+    $commentErr = "Comment is required";
     $errorBorderComment = "errorborder";
     $continue = 0;
+    $errorMaster = 0;
   } else {
     $comment = test_input($_POST["comment"]);
     $continue = 1;
+    $commentErr = "";
   }
 
   if (empty($_POST["gender"])) {
     $genderErr = "Gender is required";
     $continue = 0;
     $errorBorderGender = "errorborder";
+    $errorMaster = 0;
   } else {
     $gender = test_input($_POST["gender"]);
     $continue = 1;
+    $genderErr = "";
   } 
 
   $genderLooper = 1;
@@ -312,16 +335,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // checks for empty vars
   if ($gender === "female" && $genderLooper === 1) {
     $checkedFemale = "checked";
     $genderLooper = 0;
+    $genderErr = "";
   } elseif ($gender === "male" && $genderLooper === 1) {
     $checkedMale = "checked";
     $genderLooper = 0;
+    $genderErr = "";
   } elseif ($gender === "other" && $genderLooper === 1) {
     $genderLooper = 0;
     $checkedOther = "checked";
+    $genderErr = "";
   } else {
     $errorBorderGender = "errorborder";
     $continue = 0;
     $genderErr = "Gender is required";
+    $errorMaster = 0;
   }
 }
 
@@ -340,9 +367,12 @@ function test_input($data) {
   $data = htmlspecialchars($data);
   return $data;
 }
+
+
+
 $time = date("Y-m-d h:i:sa");
 // Upload to database
-if ($continue === 1) {
+if ($continue === 1 && empty($errorMaster)) {
 
 $servername = "localhost";
 $username = "root";
@@ -359,7 +389,6 @@ if ($conn->connect_error) {
   $sql = "INSERT INTO comments (name, dou, email, gender, website, comment, ip) # website not included
 VALUES ('$name', '$time', '$email', '$gender', '$website', '$comment', '$userIP');";
 } elseif (empty($website)) {
-  $website = "N/A";
   $time = date("Y-m-d h:i:sa"); // updates time
   $sql = "INSERT INTO comments (name, dou, email, gender, website, comment, ip) 
 VALUES ('$name', '$time', '$email', '$gender', '$website', '$comment', '$userIP');"; # website included
@@ -381,7 +410,7 @@ $conn->close();
 <div style="background-color: rgba(0, 0, 0, 0.54); display: inline-block; float: center; padding: 50px 150px 50px 150px; margin-top: 100px;">
 
 <style>#blue {color: #3a6ec1; font-family: 'roboto-thin', sans-serif; font-size: 15px; background-color: rgba(0, 0, 0, 0.64);}</style>
-<span id="blue" style="padding: none; margin: none;"><p> <b style="font-size: 20px;">Comment/Suggestion form:</b> send your requests/suggestions here.</p></span>
+<span id="blue" style="padding: none; margin: none; background-color: rgba(0, 0, 0, 0.54);"><p style="background-color: rgba(0, 0, 0, 0.54);"> <b style="font-size: 23px; background-color: rgba(0, 0, 0, 0.54);">Comment/Suggestion form:</b> send your requests/suggestions here.</p></span>
 <p id="errorField">* required field</p>
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
     <span id="blue">Name:</span> <input id="<?php echo $errorBorderName; ?>" value="<?php echo "$name"; ?>" placeholder="Name" type="text" name="name">    <span id="error"><?php echo "* $nameErr";?></span><br>
